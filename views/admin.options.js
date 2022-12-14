@@ -2,7 +2,16 @@ import mongoose from 'mongoose'
 import AdminJS from 'adminjs'
 import AdminJsMongoose from '@adminjs/mongoose'
 AdminJS.registerAdapter(AdminJsMongoose);
-import {Signup} from '../models/signup.js';
+import { Signup } from '../models/signup.js';
+
+// custom component config
+import { ComponentLoader } from 'adminjs';
+const componentLoader = new ComponentLoader();
+const Components = {
+	MyPills: componentLoader.add('MyRolePill', './components/my-pills.jsx'),
+	// other custom components
+};
+
 const usersNavigation = {
 	name: 'Users',
 	icon: 'User',
@@ -37,6 +46,12 @@ export const adminConfig = new AdminJS({
 				navigation: usersNavigation,
 				id: 'profiles', // here the resource identifier has been renamed to "profiles"
 				properties: {
+					role: {
+						type: 'string',
+						components: {
+							list: Components.MyPills,
+						},
+					},
 					user_type: {
 						isVisible: {
 							edit: true,
@@ -129,6 +144,7 @@ export const adminConfig = new AdminJS({
 		},
 	},
 	rootPath: '/admin',
+	componentLoader,
 });
 
 // module.exports = admin;
